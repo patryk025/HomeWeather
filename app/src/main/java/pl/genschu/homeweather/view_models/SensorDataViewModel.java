@@ -3,6 +3,7 @@ package pl.genschu.homeweather.view_models;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.List;
@@ -23,6 +24,6 @@ public class SensorDataViewModel extends ViewModel {
 
     private LiveData<List<SensorDataObject>> loadSensorDataFromDatabase() {
         Log.d("Test", "loadSensorDataFromDatabase");
-        return null;
+        return new MutableLiveData<>();
     }
 }

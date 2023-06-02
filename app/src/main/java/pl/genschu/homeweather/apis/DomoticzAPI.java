@@ -9,7 +9,7 @@ import retrofit2.http.Path;
 
 public interface DomoticzAPI {
     @GET("/json.htm?type=devices&used=true&order=Name")
-    Call<List<DomoticzJsonRoot>> getSensors();
+    Call<DomoticzJsonRoot> getSensors();
 
     //@GET("/json.htm?type=graph&sensor={type}&idx={idx}&range=day")
     //Call<List<SensorDataObject>> getHistory(@Path("type") String type, @Path("idx") String idx);

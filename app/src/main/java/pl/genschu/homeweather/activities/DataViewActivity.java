@@ -3,10 +3,14 @@ package pl.genschu.homeweather.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 
 import java.util.List;
@@ -23,7 +27,13 @@ public class DataViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_view);
 
-        startService(new Intent(getBaseContext(), DomoticzDataService.class));
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        JobInfo jobInfo = new JobInfo.Builder(0, new ComponentName(this, DomoticzDataService.class))
+                // set any constraints here
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .build();
+        jobScheduler.schedule(jobInfo);
 
         SensorDataViewModel viewModel = new ViewModelProvider(this).get(SensorDataViewModel.class);
 
