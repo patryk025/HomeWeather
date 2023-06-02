@@ -2,13 +2,17 @@ package pl.genschu.homeweather.sqlite;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import pl.genschu.homeweather.builders.SensorDataBuilder;
 import pl.genschu.homeweather.objects.SensorDataObject;
 
 public class DbHelper extends SQLiteOpenHelper {
-
     private static final String DB_NAME = "HomeWeather";
     private static final int DB_VERSION = 1;
 
@@ -27,24 +31,57 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private static void insertData(SQLiteDatabase db, SensorDataObject object) {
-        ContentValues obiektValues = new ContentValues();
-        obiektValues.put("id", object.getIdx());
-        obiektValues.put("data", object.getData());
-        obiektValues.put("unit", object.getUnitSymbol());
-        db.insert(object.getEngine(), null, obiektValues);
+        db.beginTransaction();
+        try {
+            String sql = "INSERT OR REPLACE INTO SENSOR_DATA (idx, name, data, unit, engine, date) VALUES (?, ?, ?, ?, ?, ?)";
+            db.execSQL(sql, new Object[]{object.getIdx(), object.getName(), object.getData(), object.getUnitSymbol(), object.getEngine(), object.getDate()});
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            // handle error
+        } finally {
+            db.endTransaction();
+        }
     }
 
     private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
-        /*if(oldVersion < 1) {
-            db.execSQL("CREATE TABLE ORGANIZACJA (_id INTEGER PRIMARY KEY AUTOINCREMENT, NAZWA TEXT, RODZAJ TEXT);");
-            wstawOrganizacja(db, "Koło Naukowe Informatyki", "koło naukowe");
-            wstawOrganizacja(db, "Akademicki Zespół Sportowy", "sport");
-            wstawOrganizacja(db, "Bulionik", "akademik");
-            wstawOrganizacja(db, "Katedra Informatyki", "katedra");
-            wstawOrganizacja(db, "Sieć Uczelniana", "administrator");
+        if (oldVersion < 1) {
+            db.execSQL("CREATE TABLE SENSOR_DATA ("
+                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + "idx INTEGER, "
+                    + "data TEXT, "
+                    + "engine TEXT, "
+                    + "unit TEXT);");
         }
-        if(oldVersion < 2) {
-            db.execSQL("ALTER TABLE ORGANIZACJA ADD COLUMN TELEFON TEXT;");
-        }*/
+    }
+
+    public List<SensorDataObject> getAllSensorData() {
+        List<SensorDataObject> sensorDataList = new ArrayList<>();
+
+        // select all query
+        String selectQuery = "SELECT * FROM SENSOR_DATA";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                SensorDataObject sensorData = new SensorDataBuilder()
+                        .addIdx(cursor.getInt(cursor.getColumnIndexOrThrow("idx")))
+                        .addName(cursor.getString(cursor.getColumnIndexOrThrow("name")))
+                        .addEngine(cursor.getString(cursor.getColumnIndexOrThrow("engine")))
+                        .addData(cursor.getString(cursor.getColumnIndexOrThrow("data")))
+                        .addUnitSymbol(cursor.getString(cursor.getColumnIndexOrThrow("unit")))
+                        .build();
+
+                // adding to list
+                sensorDataList.add(sensorData);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        return sensorDataList;
     }
 }

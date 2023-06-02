@@ -8,13 +8,15 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import pl.genschu.homeweather.R;
+
 @SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("MyApp", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
         String domoticzUrl = sharedPreferences.getString("domoticzUrl", "");
         String homeAssistantUrl = sharedPreferences.getString("homeAssistantUrl", "");
         /*if(domoticzUrl.isEmpty() && homeAssistantUrl.isEmpty()){

@@ -2,12 +2,15 @@ package pl.genschu.homeweather.objects;
 
 public class SensorDataObject {
     private int idx;
+    private String name;
     private String engine;
     private String data;
     private String unitSymbol;
+    private long date;
 
-    public SensorDataObject(int idx, String engine, String data, String unitSymbol) {
+    public SensorDataObject(int idx, String name, String engine, String data, String unitSymbol) {
         this.idx = idx;
+        this.name = name;
         this.engine = engine;
         this.data = data;
         this.unitSymbol = unitSymbol;
@@ -19,6 +22,14 @@ public class SensorDataObject {
 
     public void setIdx(int idx) {
         this.idx = idx;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getSensorObject() {
@@ -51,5 +62,13 @@ public class SensorDataObject {
 
     public void setUnitSymbol(String unitSymbol) {
         this.unitSymbol = unitSymbol;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
     }
 }

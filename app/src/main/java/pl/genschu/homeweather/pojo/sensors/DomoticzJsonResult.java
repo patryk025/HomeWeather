@@ -1,4 +1,4 @@
-package pl.genschu.homeweather.pojo; 
+package pl.genschu.homeweather.pojo.sensors;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
