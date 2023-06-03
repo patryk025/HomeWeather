@@ -16,7 +16,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "HomeWeather";
     private static final int DB_VERSION = 1;
 
-    DbHelper(Context context) {
+    public DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
@@ -30,11 +30,12 @@ public class DbHelper extends SQLiteOpenHelper {
         updateMyDatabase(db, oldVersion, newVersion);
     }
 
-    private static void insertData(SQLiteDatabase db, SensorDataObject object) {
+    public void insertData(SensorDataObject object) {
+        SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
         try {
             String sql = "INSERT OR REPLACE INTO SENSOR_DATA (idx, name, data, unit, engine, date) VALUES (?, ?, ?, ?, ?, ?)";
-            db.execSQL(sql, new Object[]{object.getIdx(), object.getName(), object.getData(), object.getUnitSymbol(), object.getEngine(), object.getDate()});
+            db.execSQL(sql, new Object[]{object.getIdx(), object.getName(), String.join("|", object.getData()), String.join("|", object.getUnitSymbol()), object.getEngine(), object.getDate()});
             db.setTransactionSuccessful();
         } catch (Exception e) {
             // handle error
@@ -47,10 +48,12 @@ public class DbHelper extends SQLiteOpenHelper {
         if (oldVersion < 1) {
             db.execSQL("CREATE TABLE SENSOR_DATA ("
                     + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "idx INTEGER, "
+                    + "idx INTEGER UNIQUE, "
+                    + "name TEXT, "
                     + "data TEXT, "
                     + "engine TEXT, "
-                    + "unit TEXT);");
+                    + "unit TEXT, "
+                    + "date TEXT);");
         }
     }
 
@@ -70,8 +73,9 @@ public class DbHelper extends SQLiteOpenHelper {
                         .addIdx(cursor.getInt(cursor.getColumnIndexOrThrow("idx")))
                         .addName(cursor.getString(cursor.getColumnIndexOrThrow("name")))
                         .addEngine(cursor.getString(cursor.getColumnIndexOrThrow("engine")))
-                        .addData(cursor.getString(cursor.getColumnIndexOrThrow("data")))
-                        .addUnitSymbol(cursor.getString(cursor.getColumnIndexOrThrow("unit")))
+                        .addData(cursor.getString(cursor.getColumnIndexOrThrow("data")).split("\\|"))
+                        .addUnitSymbol(cursor.getString(cursor.getColumnIndexOrThrow("unit")).split("\\|"))
+                        .addDate(cursor.getString(cursor.getColumnIndexOrThrow("date")))
                         .build();
 
                 // adding to list

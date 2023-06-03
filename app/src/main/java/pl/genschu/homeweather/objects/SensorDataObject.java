@@ -4,11 +4,11 @@ public class SensorDataObject {
     private int idx;
     private String name;
     private String engine;
-    private String data;
-    private String unitSymbol;
+    private String[] data;
+    private String[] unitSymbol;
     private String date;
 
-    public SensorDataObject(int idx, String name, String engine, String data, String unitSymbol, String date) {
+    public SensorDataObject(int idx, String name, String engine, String[] data, String[] unitSymbol, String date) {
         this.idx = idx;
         this.name = name;
         this.engine = engine;
@@ -49,19 +49,19 @@ public class SensorDataObject {
         this.engine = engine;
     }
 
-    public String getData() {
+    public String[] getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(String[] data) {
         this.data = data;
     }
 
-    public String getUnitSymbol() {
+    public String[] getUnitSymbol() {
         return unitSymbol;
     }
 
-    public void setUnitSymbol(String unitSymbol) {
+    public void setUnitSymbol(String[] unitSymbol) {
         this.unitSymbol = unitSymbol;
     }
 
