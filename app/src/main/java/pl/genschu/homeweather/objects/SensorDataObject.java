@@ -6,14 +6,15 @@ public class SensorDataObject {
     private String engine;
     private String data;
     private String unitSymbol;
-    private long date;
+    private String date;
 
-    public SensorDataObject(int idx, String name, String engine, String data, String unitSymbol) {
+    public SensorDataObject(int idx, String name, String engine, String data, String unitSymbol, String date) {
         this.idx = idx;
         this.name = name;
         this.engine = engine;
         this.data = data;
         this.unitSymbol = unitSymbol;
+        this.date = date;
     }
 
     public int getIdx() {
@@ -64,11 +65,11 @@ public class SensorDataObject {
         this.unitSymbol = unitSymbol;
     }
 
-    public long getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

@@ -8,6 +8,7 @@ public class SensorDataBuilder {
     private String engine;
     private String data;
     private String unitSymbol;
+    private String date;
 
     public SensorDataBuilder addIdx(int idx) {
         this.idx = idx;
@@ -34,7 +35,12 @@ public class SensorDataBuilder {
         return this;
     }
 
+    public SensorDataBuilder addDate(String date) {
+        this.date = date;
+        return this;
+    }
+
     public SensorDataObject build() {
-        return new SensorDataObject(idx, name, engine, data, unitSymbol);
+        return new SensorDataObject(idx, name, engine, data, unitSymbol, date);
     }
 }

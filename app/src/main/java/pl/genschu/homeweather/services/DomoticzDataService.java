@@ -11,6 +11,7 @@ import java.util.List;
 import pl.genschu.homeweather.apis.DomoticzAPI;
 import pl.genschu.homeweather.helpers.RetrofitClient;
 import pl.genschu.homeweather.objects.SensorDataObject;
+import pl.genschu.homeweather.pojo.sensors.DomoticzJsonResult;
 import pl.genschu.homeweather.pojo.sensors.DomoticzJsonRoot;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +54,13 @@ public class DomoticzDataService extends JobService {
     }
 
     private void saveDataToDatabase(DomoticzJsonRoot response) {
+        List<DomoticzJsonResult> sensorsRawData = response.getResult();
+        SensorDataObject tmp;
+        for(DomoticzJsonResult sensorRawData : sensorsRawData) {
+            tmp = new SensorDataObject(Integer.parseInt(sensorRawData.getIdx()), sensorRawData.getName(), "temp", sensorRawData.getData(), ""+sensorRawData.getUnit(), sensorRawData.getLastUpdate());
+        }
         Log.d("Test", "saveDataToDatabase");
     }
+
+
 }
